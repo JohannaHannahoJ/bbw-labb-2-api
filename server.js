@@ -39,15 +39,25 @@ app.get('/api/workexperience', (req, res) => {
             return;
         }
 
+        if (results.length === 0) {
+            res.status(404).json({ message: "No workexperience found" });
+            return;
+        }
+
         res.json(results);
     });
 });
 
 // create new workexperience
 app.post('/api/workexperience', (req, res) => {
+
+    // check if it is data in body
+    if (!req.body) {
+        return res.status(400).json({ message: "No data sent" });
+    }
+
     let company_name = req.body.company_name;
     let job_title = req.body.job_title;
-    let location = req.body.location;
     let start_date = req.body.start_date;
     let end_date = req.body.end_date;
     let description = req.body.description;
@@ -71,7 +81,6 @@ app.post('/api/workexperience', (req, res) => {
         errors.https_response.code = 400;
 
         res.status(400).json(errors);
-
         return;
     }
 
@@ -104,12 +113,90 @@ app.post('/api/workexperience', (req, res) => {
 
 // update
 app.put('/api/workexperience/:id', (req, res) => {
-    res.json({ message: "Workexperience uppdated: " + req.params.id });
+    let id = req.params.id;
+
+    // check if it is data in body
+    if (!req.body) {
+        res.status(400).json({ message: "No data sent" });
+        return;
+    }
+
+    let company_name = req.body.company_name;
+    let job_title = req.body.job_title;
+    let start_date = req.body.start_date;
+    let end_date = req.body.end_date;
+    let description = req.body.description;
+
+    //validering
+    let errors = {
+        message: "",
+        details: "",
+        https_response: {}
+    };
+
+    if (!company_name || !job_title || !start_date || !description) {
+        errors.message = "Company name, job title start date and/or description not included";
+        errors.details = "You must include company name, job title start date and description in JSON";
+
+        errors.https_response.message = "Bad Request";
+        errors.https_response.code = 400;
+
+        res.status(400).json(errors);
+        return;
+    }
+
+    //Update worexperience
+    connection.query(`
+        UPDATE workexperience SET
+        company_name = ?,
+        job_title = ?,
+        start_date = ?,
+        end_date = ?,
+        description = ?
+        WHERE id = ?`,
+        [company_name, job_title, start_date, end_date, description, id],
+        (err, results) => {
+
+            if (err) {
+                res.status(500).json({ error: "Something went wrong: " + err });
+                return;
+            }
+
+            if (results.affectedRows === 0) {
+                res.status(404).json({ message: "No workexperience found with that id" });
+                return;
+            }
+
+            res.json({
+                message: "Workexperience updated: " + req.params.id
+            });
+        }
+    );
 });
 
 // delete
 app.delete('/api/workexperience/:id', (req, res) => {
-    res.json({ message: "Workexperience deleted: " + req.params.id });
+    let id = req.params.id;
+
+    if (!id) {
+        res.status(400).json({ message: "Missing id" });
+        return;
+    }
+
+    connection.query(
+        "DELETE FROM workexperience WHERE id = ?",
+        [id],
+        (err, result) => {
+
+            if (err) {
+                res.status(500).json({ error: "Database error: " + err });
+                return;
+            }
+            res.json({
+                message: "Workexperience deleted: " + req.params.id
+            });
+        }
+    );
 });
 
 // --
