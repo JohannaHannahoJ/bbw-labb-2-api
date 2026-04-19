@@ -3,7 +3,7 @@
 **Genomförd av joha2102**
 
 Detta projekt är en del av Laboration 2 i kursen Backend-baserad webbutveckling.
-Syftet är att skapa en REST-baserad webbtjänst som kan hantera data och kommunicera med en frontend-applikation. Del 2 av uppgiften är en frontend-applikation som finns här: -länk kommer.
+Syftet är att skapa en REST-baserad webbtjänst som kan hantera data och kommunicera med en frontend-applikation. Del 2 av uppgiften är en frontend-applikation som finns här: https://github.com/JohannaHannahoJ/bbw-labb-2-frontend
 
 Den här delen av uppgiften, API-delen är skapad med NodeJS, Express och CORS (för att frontend-applikationen ska kunna göra anrop) samt databasen i Mysql.
 
