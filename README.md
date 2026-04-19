@@ -43,6 +43,11 @@ VALUES
 ('Fest AB', 'Festare', '2021-01-02', '2022-01-01', 'Jobbade med fest'),
 ('Hest AB', 'Hestare', '2022-01-02', NULL, 'Jobbade med hest');
 ```
+3. Lägg till UNIQUE för att undvika dubletter:
+```sql
+ALTER TABLE workexperience
+ADD UNIQUE (company_name, job_title, start_date);
+```
 
 ## Installation
 
